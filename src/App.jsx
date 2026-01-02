@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
+const BASE_URL = "https://weather-fvsx.onrender.com";
+
 function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
@@ -8,7 +10,7 @@ function App() {
   const [aqi, setAqi] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState(""); 
+  const [backgroundImage, setBackgroundImage] = useState("");
 
   const defaultCity = "Delhi";
 
@@ -16,21 +18,22 @@ function App() {
     fetchWeather(defaultCity);
   }, []);
 
-const fetchCityImage = async (cityName) => {
-  const UNSPLASH_ACCESS_KEY = "aMnq1TxnCHkaQ4q7m5T43NqtG70WNMTTcwHTrwUyMOY";
-  try {
-    const response = await fetch(
-      `https://api.unsplash.com/photos/random?query=${cityName}&client_id=${UNSPLASH_ACCESS_KEY}&orientation=landscape`
-    );
-    const data = await response.json();
-    return data.urls.regular; 
-  } catch (err) {
-    console.error("Error fetching city image:", err);
-    return null;
-  }
-};
 
+  const fetchCityImage = async (cityName) => {
+    const UNSPLASH_ACCESS_KEY = "aMnq1TxnCHkaQ4q7m5T43NqtG70WNMTTcwHTrwUyMOY";
+    try {
+      const response = await fetch(
+        `https://api.unsplash.com/photos/random?query=${cityName}&client_id=${UNSPLASH_ACCESS_KEY}&orientation=landscape`
+      );
+      const data = await response.json();
+      return data?.urls?.regular || null;
+    } catch (err) {
+      console.error("Error fetching city image:", err);
+      return null;
+    }
+  };
 
+  
   const fetchWeather = async (cityName) => {
     const cityToFetch = cityName || city;
     if (!cityToFetch) {
@@ -42,9 +45,9 @@ const fetchCityImage = async (cityName) => {
     setError("");
 
     try {
-      
+    
       const weatherRes = await fetch(
-        `http://127.0.0.1:5000/weather?city=${cityToFetch}`
+        `${BASE_URL}/weather?city=${cityToFetch}`
       );
       const weatherData = await weatherRes.json();
 
@@ -58,23 +61,21 @@ const fetchCityImage = async (cityName) => {
 
       
       const forecastRes = await fetch(
-        `http://127.0.0.1:5000/forecast?city=${cityToFetch}`
+        `${BASE_URL}/forecast?city=${cityToFetch}`
       );
       const forecastData = await forecastRes.json();
       setForecast(forecastData.forecast || []);
 
-      
+     
       const aqiRes = await fetch(
-        `http://127.0.0.1:5000/aqi?lat=${weatherData.lat}&lon=${weatherData.lon}`
+        `${BASE_URL}/aqi?lat=${weatherData.lat}&lon=${weatherData.lon}`
       );
       const aqiData = await aqiRes.json();
       setAqi(aqiData);
 
       
       const cityImg = await fetchCityImage(cityToFetch);
-      if (cityImg) setBackgroundImage(cityImg);
-      else setBackgroundImage(""); 
-
+      setBackgroundImage(cityImg || "");
     } catch (err) {
       setError("Failed to fetch data. Please try again.");
     } finally {
@@ -82,6 +83,7 @@ const fetchCityImage = async (cityName) => {
     }
   };
 
+ 
   const getWeatherEmoji = (condition) => {
     if (!condition) return "❓";
     condition = condition.toLowerCase();
@@ -92,6 +94,7 @@ const fetchCityImage = async (cityName) => {
     if (condition.includes("storm") || condition.includes("thunder")) return "🌩️";
     return "🌡️";
   };
+
 
   const getAQIStatus = (value) => {
     if (value === 1) return "Good 😁";
@@ -131,7 +134,9 @@ const fetchCityImage = async (cityName) => {
           <h2 className="city-name">
             {weather.city}, {weather.country}
           </h2>
-          <div className="weather-emoji">{getWeatherEmoji(weather.condition)}</div>
+          <div className="weather-emoji">
+            {getWeatherEmoji(weather.condition)}
+          </div>
           <p className="weather-condition">{weather.condition}</p>
           <p>🌡️ Temp: {weather.temp}°C</p>
           <p>💧 Humidity: {weather.humidity}%</p>
@@ -168,4 +173,3 @@ const fetchCityImage = async (cityName) => {
 }
 
 export default App;
-
