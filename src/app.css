@@ -1,127 +1,192 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap");
+
+/* ---------- GLOBAL ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
 
 .app-container {
   min-height: 100vh;
-  padding: 40px 20px;
-  font-family: 'Poppins', sans-serif;
-
-  background: #b0e0ff;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
+  background-attachment: fixed;
+  padding: 40px 20px;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
 }
 
-
-.app-container::before {
-  content: "";
+.overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.2); 
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
   z-index: 0;
 }
-
 
 .app-container > * {
   position: relative;
   z-index: 1;
 }
 
+/* ---------- TITLE ---------- */
 .app-title {
-  font-size: 3.2rem;
+  font-size: 3rem;
   font-weight: 800;
-  margin-bottom: 30px;
-  color: #1e3a8a;
-  text-shadow: 0 0 5px #93c5fd;
-  animation: glow 3s infinite alternate;
+  margin-bottom: 25px;
+  color: #090744;
+  text-shadow: 0 0 12px #93c5fd;
 }
 
-@keyframes glow {
-  from { text-shadow: 0 0 10px #60a5fa; }
-  to { text-shadow: 0 0 30px #93c5fd; }
-}
-
+/* ---------- SEARCH ---------- */
 .input-container {
   display: flex;
-  max-width: 420px;
-  width: 100%;
-  margin-bottom: 25px;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
 }
 
 .city-input {
-  flex: 1;
-  padding: 14px;
-  border-radius: 14px 0 0 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
   border: none;
-  font-size: 1rem;
+  width: 240px;
   outline: none;
 }
 
-.search-button {
-  padding: 14px 20px;
-  border-radius: 0 14px 14px 0;
+button {
+  padding: 14px 22px;
+  border-radius: 14px;
   border: none;
+  cursor: pointer;
   background: linear-gradient(135deg, #38bdf8, #2563eb);
   color: white;
   font-weight: 600;
-  cursor: pointer;
   transition: transform 0.3s ease;
 }
 
-.search-button:hover {
-  transform: scale(1.1);
+button:hover {
+  transform: scale(1.08);
 }
 
+/* ======================================================
+   MAIN WEATHER CARD (FROM FIRST CSS – UNTOUCHED LOOK)
+====================================================== */
+.city-card {
+  width: 360px;        /* ⬆️ was 320 */
+  height: 460px;       /* ⬆️ was 420 */
+  margin: 25px auto;
+
+  background: linear-gradient(180deg, #e8f1ff, #ffffff);
+  border-radius: 28px;
+  padding: 24px;      /* ⬆️ more spacing */
+  text-align: center;
+  box-shadow: 0 24px 45px rgba(0, 0, 0, 0.16);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+
+
+.city-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.city-header p {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.icon-wrapper img {
+  width: 80px;
+  margin: 8px auto;
+}
+
+.temp {
+  font-size: 40px;
+}
+
+.condition {
+  margin-bottom: 6px;
+}
+
+
+.city-illustration {
+  margin-top: 20px;
+}
+
+.city-illustration img {
+  width: 100%;
+  max-height: 150px;   /* ⬆️ was 120 */
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+
+
+/* ======================================================
+   COMMON CARD STYLE (AQI + FORECAST)
+====================================================== */
 .weather-card,
 .forecast-card {
-  backdrop-filter: none;
-  background: #ffffff;    
+  background: rgb(244, 242, 242);
+  backdrop-filter: blur(14px);
   border-radius: 22px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  color: #1e293b; 
-}
-
-
-.weather-card:hover,
-.forecast-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-}
-
-.weather-card {
-  max-width: 420px;
-  width: 100%;
-  padding: 25px;
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.city-name {
-  font-size: 1.8rem;
-  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   color: #1e293b;
 }
 
-.weather-emoji {
-  font-size: 4rem;
-  margin: 10px 0;
+.weather-card:hover,
+.forecast-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
 }
-/* vertical */
+
+/* ---------- AQI CARD ---------- */
+.aqi-card {
+  width: 380px;        /* ⬆️ was 340 */
+  padding: 26px;      /* ⬆️ more breathing room */
+  margin: 35px 0;
+
+  background: rgba(244, 242, 242);
+  backdrop-filter: blur(14px);
+  border-radius: 26px;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.16);
+}
+
+.aqi-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.aqi-card p {
+  font-size: 1rem;
+  margin: 6px 0;
+}
+
+
+/* ---------- FORECAST ---------- */
 .forecast-container {
   max-width: 420px;
   width: 100%;
+  margin-bottom: 40px;
 }
 
-.forecast-container h3 {
-  text-align: center;
-  margin-bottom: 20px;
-  text-shadow: 0 0 12px #60a5fa;
+.forecast-container {
+  max-width: 460px;    /* ⬆️ was 420 */
+  width: 100%;
+  margin-bottom: 50px;
 }
+
 
 .forecast-list {
   display: flex;
@@ -142,15 +207,16 @@
 }
 
 .forecast-card {
-  padding: 18px;
-  position: relative;
+  padding: 22px;      /* ⬆️ was 18 */
+  border-radius: 22px;
 }
+
 
 .forecast-card::before {
   content: "";
   position: absolute;
   left: -25px;
-  top: 24px;
+  top: 26px;
   width: 14px;
   height: 14px;
   background: #38bdf8;
@@ -158,17 +224,31 @@
   box-shadow: 0 0 15px #38bdf8;
 }
 
-
+/* ---------- ERROR ---------- */
 .error-card {
-  background: rgba(254, 202, 202, 0.5);
-  padding: 14px;
+  background: rgba(254, 202, 202, 0.6);
+  padding: 14px 18px;
   border-radius: 14px;
   color: #991b1b;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-/* mobile */
+/* ---------- MOBILE ---------- */
 @media (max-width: 500px) {
-  .app-title {
-    font-size: 2.3rem;
+  .city-card {
+    width: 310px;     /* ⬆️ was 280 */
+    height: 420px;
+  }
+
+  .aqi-card {
+    width: 330px;
+  }
+
+  .forecast-container {
+    max-width: 340px;
   }
 }
+
+
+
